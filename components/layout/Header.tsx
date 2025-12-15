@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { MobileFiltersSheet } from './MobileFiltersSheet'
+import { CartSheet } from '@/components/cart/CartSheet'
 
 export const Header = () => {
   return (
@@ -23,7 +24,9 @@ export const Header = () => {
         <MobileFiltersSheet />
 
         {/* Mobile Search Toggle & Cart */}
-        <div className="flex items-center gap-2">{/* Cart */}</div>
+        <div className="flex items-center gap-2">
+          <CartSheet />
+        </div>
       </div>
     </header>
   )

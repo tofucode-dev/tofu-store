@@ -30,7 +30,9 @@
     "react-dom": "19.2.2",
     "react-instantsearch": "^7.21.0",
     "react-instantsearch-nextjs": "^1.0.9",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.2.0",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
