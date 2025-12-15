@@ -15,9 +15,11 @@ export function RelatedProducts({ products, title = 'You may also like' }: Relat
         {title}
       </h2>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:gap-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:gap-6" role="list" aria-label={`${products.length} related products`}>
         {products.map(product => (
-          <ProductCard key={product.objectID} product={product} hideAddToCart />
+          <div key={product.objectID} role="listitem">
+            <ProductCard product={product} hideAddToCart />
+          </div>
         ))}
       </div>
     </section>

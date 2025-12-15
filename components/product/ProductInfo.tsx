@@ -43,14 +43,25 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
   return (
     <div className="flex flex-col gap-6">
       {/* Brand & Categories */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Product information">
         {product.brand && (
-          <Badge variant="secondary" className="text-sm font-medium">
+          <Badge
+            variant="secondary"
+            className="text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
+            aria-label={`Brand: ${product.brand}`}
+            tabIndex={0}
+          >
             {product.brand}
           </Badge>
         )}
         {product.categories?.slice(0, 2).map(category => (
-          <Badge key={category} variant="outline" className="text-sm">
+          <Badge
+            key={category}
+            variant="outline"
+            className="text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
+            aria-label={`Category: ${category}`}
+            tabIndex={0}
+          >
             {category}
           </Badge>
         ))}
@@ -58,9 +69,19 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
 
       {/* Product Name */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl">{product.name}</h1>
+        <h1
+          className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
+          tabIndex={0}
+        >
+          {product.name}
+        </h1>
         {product.rating !== undefined && (
-          <div className="mt-3">
+          <div
+            className="mt-3 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
+            role="group"
+            aria-label={`Product rating: ${product.rating.toFixed(1)} out of 5 stars`}
+            tabIndex={0}
+          >
             <StarRating rating={product.rating} />
           </div>
         )}
@@ -68,17 +89,39 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
 
       {/* Price */}
       {product.price !== undefined && (
-        <div className="flex items-baseline gap-3">
-          <span className="text-3xl font-bold text-foreground sm:text-4xl">${product.price.toFixed(2)}</span>
-          <span className="text-sm text-muted-foreground">Tax included</span>
+        <div
+          className="flex items-baseline gap-3 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
+          role="group"
+          aria-label="Pricing information"
+          tabIndex={0}
+        >
+          <span
+            className="text-3xl font-bold text-foreground sm:text-4xl"
+            aria-label={`Price: $${product.price.toFixed(2)}`}
+          >
+            ${product.price.toFixed(2)}
+          </span>
+          <span className="text-sm text-muted-foreground" aria-hidden="true">
+            Tax included
+          </span>
+          <span className="sr-only">Tax included in price</span>
         </div>
       )}
 
-      <Separator />
+      <Separator aria-hidden="true" />
 
       {/* Description Preview */}
       {product.description && (
-        <p className="text-muted-foreground leading-relaxed line-clamp-3">{product.description}</p>
+        <div>
+          <h2 className="sr-only">Product Description</h2>
+          <p
+            className="text-muted-foreground leading-relaxed line-clamp-3 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
+            aria-label={`Product description: ${product.description}`}
+            tabIndex={0}
+          >
+            {product.description}
+          </p>
+        </div>
       )}
 
       {/* Quantity Selector */}
@@ -86,8 +129,8 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
         <label htmlFor="quantity" className="text-sm font-medium">
           Quantity
         </label>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center rounded-lg border border-input">
+        <div className="flex items-center gap-3" role="group" aria-label="Quantity selector">
+          <div className="flex items-center rounded-lg border border-input" role="group" aria-label="Quantity controls">
             <Button
               type="button"
               variant="ghost"
@@ -95,9 +138,9 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
               className="h-10 w-10 rounded-r-none"
               onClick={decrementQuantity}
               disabled={quantity <= 1}
-              aria-label="Decrease quantity"
+              aria-label={`Decrease quantity. Current quantity is ${quantity}`}
             >
-              −
+              <span aria-hidden="true">−</span>
             </Button>
             <input
               id="quantity"
@@ -106,8 +149,8 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
               max="99"
               value={quantity}
               onChange={e => setQuantity(Math.max(1, Math.min(99, parseInt(e.target.value) || 1)))}
-              className="h-10 w-14 border-x border-input bg-transparent text-center text-sm font-medium focus:outline-none"
-              aria-label="Quantity"
+              className="h-10 w-14 border-x border-input bg-transparent text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              aria-label={`Quantity: ${quantity}`}
             />
             <Button
               type="button"
@@ -116,27 +159,43 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
               className="h-10 w-10 rounded-l-none"
               onClick={incrementQuantity}
               disabled={quantity >= 99}
-              aria-label="Increase quantity"
+              aria-label={`Increase quantity. Current quantity is ${quantity}`}
             >
-              +
+              <span aria-hidden="true">+</span>
             </Button>
           </div>
-          <span className="text-sm text-muted-foreground">In stock</span>
+          <div
+            className="text-sm text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
+            role="status"
+            aria-live="polite"
+            tabIndex={0}
+            aria-label="Product is in stock"
+          >
+            <span aria-hidden="true">In stock</span>
+            <span className="sr-only">Product is in stock</span>
+          </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Button size="default" className="flex-1 gap-2 text-base" onClick={handleAddToCart} aria-live="polite">
+      <div className="flex flex-col gap-3 sm:flex-row" role="group" aria-label="Product actions">
+        <Button
+          size="default"
+          className="flex-1 gap-2 text-base"
+          onClick={handleAddToCart}
+          aria-label={addedToCart ? `${product.name} added to cart` : `Add ${product.name} to cart`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {addedToCart ? (
             <>
               <Check className="h-5 w-5" aria-hidden="true" />
-              Added to Cart!
+              <span>Added to Cart!</span>
             </>
           ) : (
             <>
               <ShoppingCart className="h-5 w-5" aria-hidden="true" />
-              Add to Cart
+              <span>Add to Cart</span>
             </>
           )}
         </Button>
@@ -146,7 +205,7 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
           className="gap-2"
           onClick={() => setIsWishlisted(!isWishlisted)}
           aria-pressed={isWishlisted}
-          aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+          aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
         >
           <Heart
             className={cn('h-5 w-5 transition-colors', isWishlisted ? 'fill-destructive stroke-destructive' : '')}
@@ -154,38 +213,64 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
           />
           <span className="sr-only sm:not-sr-only">{isWishlisted ? 'Saved' : 'Save'}</span>
         </Button>
-        <Button size="lg" variant="outline" className="gap-2" aria-label="Share product">
+        <Button size="lg" variant="outline" className="gap-2" aria-label={`Share ${product.name}`}>
           <Share2 className="h-5 w-5" aria-hidden="true" />
           <span className="sr-only sm:not-sr-only">Share</span>
         </Button>
       </div>
 
-      <Separator />
+      <Separator aria-hidden="true" />
 
       {/* Trust Badges */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
-          <Truck className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-          <div>
-            <p className="text-sm font-medium">Free Shipping</p>
-            <p className="text-xs text-muted-foreground">Orders over $50</p>
+      <section aria-labelledby="trust-badges-heading">
+        <h2 id="trust-badges-heading" className="sr-only">
+          Shipping and warranty information
+        </h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3" role="list">
+          <div
+            className="flex items-center gap-3 rounded-lg bg-muted/50 p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            role="listitem"
+            tabIndex={0}
+            aria-label="Free shipping on orders over $50"
+          >
+            <Truck className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+            <div>
+              <p className="text-sm font-medium">Free Shipping</p>
+              <p className="text-xs text-muted-foreground" aria-hidden="true">
+                Orders over $50
+              </p>
+            </div>
+          </div>
+          <div
+            className="flex items-center gap-3 rounded-lg bg-muted/50 p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            role="listitem"
+            tabIndex={0}
+            aria-label="2 year warranty with full coverage"
+          >
+            <Shield className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+            <div>
+              <p className="text-sm font-medium">2 Year Warranty</p>
+              <p className="text-xs text-muted-foreground" aria-hidden="true">
+                Full coverage
+              </p>
+            </div>
+          </div>
+          <div
+            className="flex items-center gap-3 rounded-lg bg-muted/50 p-3 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            role="listitem"
+            tabIndex={0}
+            aria-label="30 day returns, hassle-free"
+          >
+            <RotateCcw className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+            <div>
+              <p className="text-sm font-medium">30-Day Returns</p>
+              <p className="text-xs text-muted-foreground" aria-hidden="true">
+                Hassle-free
+              </p>
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
-          <Shield className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-          <div>
-            <p className="text-sm font-medium">2 Year Warranty</p>
-            <p className="text-xs text-muted-foreground">Full coverage</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
-          <RotateCcw className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-          <div>
-            <p className="text-sm font-medium">30-Day Returns</p>
-            <p className="text-xs text-muted-foreground">Hassle-free</p>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   )
 }

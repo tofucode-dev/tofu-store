@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, MouseEvent } from 'react'
+import { useState, MouseEvent, forwardRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { HeartIcon } from 'lucide-react'
@@ -20,121 +20,141 @@ type ProductCardProps = {
   hideAddToCart?: boolean
 }
 
-export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps) => {
-  const [liked, setLiked] = useState(false)
-  const [addedToCart, setAddedToCart] = useState(false)
-  const addItem = useCartStore(state => state.addItem)
-  const { trackAddToCart } = useAnalytics()
-  const cart = useCartStore(state => state)
+export const ProductCard = forwardRef<HTMLAnchorElement, ProductCardProps>(
+  ({ product, hideAddToCart = false }, ref) => {
+    const [liked, setLiked] = useState(false)
+    const [addedToCart, setAddedToCart] = useState(false)
+    const addItem = useCartStore(state => state.addItem)
+    const { trackAddToCart } = useAnalytics()
+    const cart = useCartStore(state => state)
 
-  const productUrl = getProductUrl(product)
+    const productUrl = getProductUrl(product)
 
-  const handleLikeClick = (e: MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setLiked(!liked)
-  }
+    const handleLikeClick = (e: MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setLiked(!liked)
+    }
 
-  const handleAddToCart = (e: MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    addItem(product, 1)
-    setAddedToCart(true)
-    setTimeout(() => setAddedToCart(false), 1500)
+    const handleAddToCart = (e: MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      addItem(product, 1)
+      setAddedToCart(true)
+      setTimeout(() => setAddedToCart(false), 1500)
 
-    // Track analytics
-    trackAddToCart(product, 1, cart.getTotalPrice(), cart.getTotalItems())
-  }
+      // Track analytics
+      trackAddToCart(product, 1, cart.getTotalPrice(), cart.getTotalItems())
+    }
 
-  return (
-    <div className="group relative flex h-full flex-col overflow-hidden rounded-lg bg-linear-to-br from-neutral-100 to-neutral-200 shadow-sm transition-all hover:shadow-md sm:rounded-xl">
-      {/* Image with Link */}
-      <Link
-        href={productUrl}
-        className="relative flex h-28 shrink-0 items-center justify-center p-2 sm:h-40 sm:p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-        aria-label={`View ${product.name}${product.brand ? ` by ${product.brand}` : ''}${
-          product.price ? `, $${product.price.toFixed(2)}` : ''
-        }`}
-      >
-        {product.image && (
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-            className="object-contain p-2 mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
+    return (
+      <article className="group relative flex h-full flex-col overflow-hidden rounded-lg bg-linear-to-br from-neutral-100 to-neutral-200 shadow-sm transition-all hover:shadow-md sm:rounded-xl">
+        {/* Image with Link */}
+        <Link
+          ref={ref}
+          href={productUrl}
+          className="relative flex h-28 shrink-0 items-center justify-center p-2 sm:h-40 sm:p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          aria-label={`View ${product.name}${product.brand ? ` by ${product.brand}` : ''}${
+            product.price ? `, $${product.price.toFixed(2)}` : ''
+          }`}
+        >
+          {product.image && (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+              className="object-contain p-2 mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
+            />
+          )}
+        </Link>
+
+        {/* Like Button */}
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={handleLikeClick}
+          aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
+          aria-pressed={liked}
+          className="absolute right-1 top-1 z-10 h-7 w-7 rounded-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-primary sm:right-2 sm:top-2 sm:h-8 sm:w-8"
+        >
+          <HeartIcon
+            aria-hidden="true"
+            className={cn(
+              'h-3.5 w-3.5 sm:h-4 sm:w-4',
+              liked ? 'fill-destructive stroke-destructive' : 'stroke-muted-foreground',
+            )}
           />
-        )}
-      </Link>
+        </Button>
 
-      {/* Like Button */}
-      <Button
-        size="icon"
-        variant="ghost"
-        onClick={handleLikeClick}
-        aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
-        aria-pressed={liked}
-        className="absolute right-1 top-1 z-10 h-7 w-7 rounded-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-primary sm:right-2 sm:top-2 sm:h-8 sm:w-8"
-      >
-        <HeartIcon
-          aria-hidden="true"
-          className={cn(
-            'h-3.5 w-3.5 sm:h-4 sm:w-4',
-            liked ? 'fill-destructive stroke-destructive' : 'stroke-muted-foreground',
-          )}
-        />
-      </Button>
-
-      {/* Card Content */}
-      <Card className="flex min-h-0 flex-1 flex-col gap-1.5 border-none rounded-none rounded-b-lg py-2 sm:gap-2 sm:rounded-b-xl sm:py-3">
-        <CardHeader className="gap-0.5 px-2 py-0 sm:gap-1 sm:px-3">
-          <Link
-            href={productUrl}
-            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
-          >
-            <CardTitle className="text-xs line-clamp-1 group-hover:text-primary transition-colors sm:text-sm">
-              {product.name}
-            </CardTitle>
-          </Link>
-          <CardDescription className="hidden flex-wrap items-center gap-1 sm:flex">
-            {product.brand && (
-              <Badge variant="outline" className="rounded-sm text-xs">
-                {product.brand}
-              </Badge>
-            )}
-            {product.categories?.[0] && (
-              <Badge variant="outline" className="rounded-sm text-xs">
-                {product.categories[0]}
-              </Badge>
-            )}
-          </CardDescription>
-          {product.rating !== undefined && <StarRating rating={product.rating} />}
-        </CardHeader>
-
-        <CardFooter className="mt-auto flex-col items-stretch gap-1.5 px-2 py-0 sm:gap-2 sm:px-3">
-          <div className="flex items-center justify-between">
-            {product.price !== undefined && (
-              <div className="flex flex-col">
-                <span className="hidden text-xs text-muted-foreground sm:block">Price</span>
-                <span className="text-sm font-semibold sm:text-base" aria-label={`Price: $${product.price.toFixed(2)}`}>
-                  ${product.price.toFixed(2)}
-                </span>
-              </div>
-            )}
-          </div>
-          {!hideAddToCart && (
-            <Button
-              size="sm"
-              className="h-7 w-full text-xs sm:h-8 sm:text-sm"
-              onClick={handleAddToCart}
-              aria-live="polite"
-              aria-label={`Add ${product.name} to cart`}
+        {/* Card Content */}
+        <Card className="flex min-h-0 flex-1 flex-col gap-1.5 border-none rounded-none rounded-b-lg py-2 sm:gap-2 sm:rounded-b-xl sm:py-3">
+          <CardHeader className="gap-0.5 px-2 py-0 sm:gap-1 sm:px-3">
+            <Link
+              href={productUrl}
+              className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
             >
-              {addedToCart ? 'Added!' : 'Add to cart'}
-            </Button>
-          )}
-        </CardFooter>
-      </Card>
-    </div>
-  )
-}
+              <CardTitle className="text-xs line-clamp-1 group-hover:text-primary transition-colors sm:text-sm">
+                {product.name}
+              </CardTitle>
+            </Link>
+            {/* Brand, Categories, and Rating - Focusable for keyboard navigation */}
+            <div
+              tabIndex={0}
+              className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm -mx-1 px-1"
+              role="group"
+              aria-label={`${product.brand ? `Brand: ${product.brand}. ` : ''}${
+                product.categories?.[0] ? `Category: ${product.categories[0]}. ` : ''
+              }${product.rating !== undefined ? `Rating: ${product.rating.toFixed(1)} out of 5 stars.` : ''}`}
+            >
+              <CardDescription className="hidden flex-wrap items-center gap-1 sm:flex" aria-hidden="true">
+                {product.brand && (
+                  <Badge variant="outline" className="rounded-sm text-xs" aria-hidden="true">
+                    {product.brand}
+                  </Badge>
+                )}
+                {product.categories?.[0] && (
+                  <Badge variant="outline" className="rounded-sm text-xs" aria-hidden="true">
+                    {product.categories[0]}
+                  </Badge>
+                )}
+              </CardDescription>
+              {product.rating !== undefined && <StarRating rating={product.rating} />}
+            </div>
+          </CardHeader>
+
+          <CardFooter className="mt-auto flex-col items-stretch gap-1.5 px-2 py-0 sm:gap-2 sm:px-3">
+            <div className="flex items-center justify-between">
+              {product.price !== undefined && (
+                <div
+                  tabIndex={0}
+                  className="flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm -mx-1 px-1"
+                  role="text"
+                  aria-label={`Price: $${product.price.toFixed(2)}`}
+                >
+                  <span className="text-xs text-muted-foreground sm:block hidden" aria-hidden="true">
+                    Price
+                  </span>
+                  <span className="text-sm font-semibold sm:text-base">${product.price.toFixed(2)}</span>
+                </div>
+              )}
+            </div>
+            {!hideAddToCart && (
+              <Button
+                size="sm"
+                className="h-7 w-full text-xs sm:h-8 sm:text-sm"
+                onClick={handleAddToCart}
+                aria-live="polite"
+                aria-label={`Add ${product.name} to cart`}
+              >
+                {addedToCart ? 'Added!' : 'Add to cart'}
+              </Button>
+            )}
+          </CardFooter>
+        </Card>
+      </article>
+    )
+  },
+)
+
+ProductCard.displayName = 'ProductCard'

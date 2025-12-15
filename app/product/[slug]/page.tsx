@@ -72,12 +72,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <>
       <ProductJsonLd product={product} />
       <ProductViewTracker product={product} />
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:ring-2 focus:ring-ring"
+      >
+        Skip to main content
+      </a>
       <Breadcrumbs product={product} />
-      <main id="main-content" className="flex-1">
+      <main id="main-content" className="flex-1" tabIndex={-1}>
         <article
           className="mx-auto max-w-7xl px-4 py-6 sm:py-8 lg:py-12"
           itemScope
           itemType="https://schema.org/Product"
+          aria-label={`Product details for ${product.name}`}
         >
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
             <div className="lg:sticky lg:top-24 lg:self-start">
