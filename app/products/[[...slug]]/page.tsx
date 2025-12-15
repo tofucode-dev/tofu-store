@@ -96,13 +96,13 @@ const ProductsPage = () => {
       <ProductListJsonLd />
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:ring-2 focus:ring-ring"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:ring-2 focus:ring-ring"
       >
         Skip to main content
       </a>
-      <div className="flex h-full flex-col overflow-hidden">
+      <div className="flex h-full w-full flex-col overflow-hidden">
         {/* Main Content Area */}
-        <div className="flex min-h-0 flex-1">
+        <div className="flex min-h-0 flex-1 w-full overflow-hidden">
           {/* Sidebar with Filters - hidden on mobile, shown via sheet */}
           <Sidebar>
             <ClearRefinements />
@@ -115,7 +115,7 @@ const ProductsPage = () => {
             <RatingRefinementFilter attribute="rating" title="Rating" limit={5} />
           </Sidebar>
           {/* Product Area */}
-          <main id="main-content" className="flex min-h-0 flex-1 flex-col" tabIndex={-1}>
+          <main id="main-content" className="flex min-h-0 flex-1 flex-col overflow-hidden" tabIndex={-1}>
             <div className="shrink-0 space-y-2 border-b border-border bg-background px-3 py-2 sm:px-6 sm:py-3">
               <ProductsPageTitle />
               <Stats />

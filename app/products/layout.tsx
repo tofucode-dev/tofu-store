@@ -7,10 +7,10 @@ export const dynamic = 'force-dynamic'
 const ProductsLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <InstantSearchProvider>
-      <div className="flex h-screen flex-col overflow-hidden">
+      <div className="fixed inset-0 flex flex-col overflow-hidden">
         <Header />
         <Breadcrumbs />
-        <div className="min-h-0 flex-1">{children}</div>
+        <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
       </div>
     </InstantSearchProvider>
   )

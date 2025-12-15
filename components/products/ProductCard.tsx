@@ -15,9 +15,10 @@ import { Badge } from '../ui/badge'
 
 type ProductCardProps = {
   product: Product
+  hideAddToCart?: boolean
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps) => {
   const [liked, setLiked] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
 
@@ -105,14 +106,16 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               </div>
             )}
           </div>
-          <Button
-            size="sm"
-            className="h-7 w-full text-xs sm:h-8 sm:text-sm"
-            onClick={handleAddToCart}
-            aria-live="polite"
-          >
-            {addedToCart ? 'Added!' : 'Add to cart'}
-          </Button>
+          {!hideAddToCart && (
+            <Button
+              size="sm"
+              className="h-7 w-full text-xs sm:h-8 sm:text-sm"
+              onClick={handleAddToCart}
+              aria-live="polite"
+            >
+              {addedToCart ? 'Added!' : 'Add to cart'}
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </Link>

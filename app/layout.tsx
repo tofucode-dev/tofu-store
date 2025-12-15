@@ -26,17 +26,15 @@ export const metadata: Metadata = {
 const RootLayout = ({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) => {
   return (
-    <html lang="en" className='h-full overflow-hidden'>
-      <body
-        className={`${plusJakartaSans.variable} ${loraSerif.variable} ${firaCodeMono.variable} antialiased h-full overflow-hidden`}
-      >
+    <html lang="en" className="h-full">
+      <body className={`${plusJakartaSans.variable} ${loraSerif.variable} ${firaCodeMono.variable} antialiased h-full`}>
         {children}
       </body>
     </html>
-  );
+  )
 }
 
 export default RootLayout
