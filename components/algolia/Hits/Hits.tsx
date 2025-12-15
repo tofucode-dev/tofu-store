@@ -11,15 +11,15 @@ export const Hits = () => {
   const { status } = useInstantSearch()
 
   if (status === 'loading' || status === 'stalled') {
-    return <EmptyHits />
-  }
-
-  if (items.length === 0) {
     return <LoadingHits />
   }
 
+  if (items.length === 0) {
+    return <EmptyHits />
+  }
+
   return (
-    <div 
+    <div
       className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
       role="region"
       aria-label="Product search results"

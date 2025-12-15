@@ -19,7 +19,12 @@ export const Pagination = () => {
       className="flex items-center justify-center gap-1 py-2 sm:gap-1.5"
     >
       {/* Screen reader announcement */}
-      <span className="sr-only">
+      <span 
+        className="sr-only" 
+        role="status" 
+        aria-live="polite" 
+        aria-atomic="true"
+      >
         Page {currentRefinement + 1} of {nbPages}
       </span>
 

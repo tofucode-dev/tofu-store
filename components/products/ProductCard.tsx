@@ -47,15 +47,15 @@ export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps
   }
 
   return (
-    <Link
-      href={productUrl}
-      className="group relative flex h-full flex-col overflow-hidden rounded-lg bg-linear-to-br from-neutral-100 to-neutral-200 shadow-sm transition-all hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 sm:rounded-xl"
-      aria-label={`${product.name}${product.brand ? ` by ${product.brand}` : ''}${
-        product.price ? `, $${product.price.toFixed(2)}` : ''
-      }`}
-    >
-      {/* Image */}
-      <div className="relative flex h-28 shrink-0 items-center justify-center p-2 sm:h-40 sm:p-4">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-lg bg-linear-to-br from-neutral-100 to-neutral-200 shadow-sm transition-all hover:shadow-md sm:rounded-xl">
+      {/* Image with Link */}
+      <Link
+        href={productUrl}
+        className="relative flex h-28 shrink-0 items-center justify-center p-2 sm:h-40 sm:p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        aria-label={`View ${product.name}${product.brand ? ` by ${product.brand}` : ''}${
+          product.price ? `, $${product.price.toFixed(2)}` : ''
+        }`}
+      >
         {product.image && (
           <Image
             src={product.image}
@@ -65,7 +65,7 @@ export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps
             className="object-contain p-2 mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
           />
         )}
-      </div>
+      </Link>
 
       {/* Like Button */}
       <Button
@@ -74,7 +74,7 @@ export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps
         onClick={handleLikeClick}
         aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
         aria-pressed={liked}
-        className="absolute right-1 top-1 h-7 w-7 rounded-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-primary sm:right-2 sm:top-2 sm:h-8 sm:w-8"
+        className="absolute right-1 top-1 z-10 h-7 w-7 rounded-full bg-white/80 hover:bg-white focus:ring-2 focus:ring-primary sm:right-2 sm:top-2 sm:h-8 sm:w-8"
       >
         <HeartIcon
           aria-hidden="true"
@@ -88,9 +88,14 @@ export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps
       {/* Card Content */}
       <Card className="flex min-h-0 flex-1 flex-col gap-1.5 border-none rounded-none rounded-b-lg py-2 sm:gap-2 sm:rounded-b-xl sm:py-3">
         <CardHeader className="gap-0.5 px-2 py-0 sm:gap-1 sm:px-3">
-          <CardTitle className="text-xs line-clamp-1 group-hover:text-primary transition-colors sm:text-sm">
-            {product.name}
-          </CardTitle>
+          <Link
+            href={productUrl}
+            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+          >
+            <CardTitle className="text-xs line-clamp-1 group-hover:text-primary transition-colors sm:text-sm">
+              {product.name}
+            </CardTitle>
+          </Link>
           <CardDescription className="hidden flex-wrap items-center gap-1 sm:flex">
             {product.brand && (
               <Badge variant="outline" className="rounded-sm text-xs">
@@ -111,7 +116,9 @@ export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps
             {product.price !== undefined && (
               <div className="flex flex-col">
                 <span className="hidden text-xs text-muted-foreground sm:block">Price</span>
-                <span className="text-sm font-semibold sm:text-base">${product.price.toFixed(2)}</span>
+                <span className="text-sm font-semibold sm:text-base" aria-label={`Price: $${product.price.toFixed(2)}`}>
+                  ${product.price.toFixed(2)}
+                </span>
               </div>
             )}
           </div>
@@ -121,12 +128,13 @@ export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps
               className="h-7 w-full text-xs sm:h-8 sm:text-sm"
               onClick={handleAddToCart}
               aria-live="polite"
+              aria-label={`Add ${product.name} to cart`}
             >
               {addedToCart ? 'Added!' : 'Add to cart'}
             </Button>
           )}
         </CardFooter>
       </Card>
-    </Link>
+    </div>
   )
 }

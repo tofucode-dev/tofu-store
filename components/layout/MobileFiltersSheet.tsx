@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,12 +18,26 @@ import { RangeSlider } from '@/components/algolia/RangeSlider'
 
 export function MobileFiltersSheet() {
   const [open, setOpen] = useState(false)
+  const firstFilterRef = useRef<HTMLDivElement>(null)
+
+  // Focus management when sheet opens
+  useEffect(() => {
+    if (open && firstFilterRef.current) {
+      // Small delay to ensure sheet is fully rendered
+      setTimeout(() => {
+        const firstFocusable = firstFilterRef.current?.querySelector<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        firstFocusable?.focus()
+      }, 100)
+    }
+  }, [open])
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2 md:hidden">
-          <SlidersHorizontal className="h-4 w-4" />
+        <Button variant="outline" size="sm" className="gap-2 md:hidden" aria-label="Open filters">
+          <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
           <span>Filters</span>
         </Button>
       </SheetTrigger>
@@ -31,7 +45,7 @@ export function MobileFiltersSheet() {
         <SheetHeader className="border-b border-border px-4 py-4">
           <SheetTitle>Filters</SheetTitle>
         </SheetHeader>
-        <div className="space-y-6 p-4">
+        <div ref={firstFilterRef} className="space-y-6 p-4">
           <ClearRefinements />
 
           <HierarchicalMenu
