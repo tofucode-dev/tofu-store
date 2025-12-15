@@ -91,7 +91,7 @@ NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY=your_search_api_key
 NEXT_PUBLIC_ALGOLIA_INDEX_NAME=your_index_name
 
 # Base URL (Optional - defaults to https://tofustore.com)
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_BASE_URL=http://localhost:3000 // tofu-store-git-main-tofucode-devs-projects.vercel.app
 ```
 
 ### 4. Generate category slugs
