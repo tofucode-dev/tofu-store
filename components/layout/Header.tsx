@@ -2,7 +2,11 @@ import Link from 'next/link'
 import { MobileFiltersSheet } from './MobileFiltersSheet'
 import { CartSheet } from '@/components/cart/CartSheet'
 
-export const Header = () => {
+type HeaderProps = {
+  hideFilters?: boolean
+}
+
+export const Header = ({ hideFilters = false }: HeaderProps) => {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-2 px-3 sm:h-16 sm:gap-4 sm:px-4">
@@ -21,7 +25,7 @@ export const Header = () => {
         </Link>
 
         {/* Mobile Filters Button - only show when using InstantSearch */}
-        <MobileFiltersSheet />
+        {!hideFilters && <MobileFiltersSheet />}
 
         {/* Mobile Search Toggle & Cart */}
         <div className="flex items-center gap-2">

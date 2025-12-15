@@ -7,7 +7,7 @@ type ProductLayoutProps = {
 const ProductLayout = ({ children }: ProductLayoutProps) => {
   return (
     <>
-      <Header />
+      <Header hideFilters={true} />
       <div className="flex min-h-screen flex-col bg-background">
         <a
           href="#main-content"
@@ -26,4 +26,4 @@ const ProductLayout = ({ children }: ProductLayoutProps) => {
   )
 }
 
-export default ProductLayout
+export default ProductLayout  
