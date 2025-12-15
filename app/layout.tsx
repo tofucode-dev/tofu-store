@@ -23,11 +23,11 @@ export const metadata: Metadata = {
   description: 'Tofu Store - Your source for all things',
 }
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html lang="en" className='h-full overflow-hidden'>
       <body
@@ -38,3 +38,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+export default RootLayout

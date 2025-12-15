@@ -6,18 +6,30 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate:slugs": "node scripts/generate-category-slugs.ts",
+    "prebuild": "node scripts/generate-category-slugs.ts"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
+    "algoliasearch": "^5.46.0",
+    "clsx": "^2.1.1",
+    "instantsearch.js": "^4.85.2",
+    "lucide-react": "^0.561.0",
     "next": "16.1.0-canary.20",
+    "radix-ui": "^1.4.3",
     "react": "19.2.2",
-    "react-dom": "19.2.2"
+    "react-dom": "19.2.2",
+    "react-instantsearch": "^7.21.0",
+    "react-instantsearch-nextjs": "^1.0.9",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.1.0-canary.20",
     "tailwindcss": "^4",
