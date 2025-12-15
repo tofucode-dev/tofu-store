@@ -8,6 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useSyncExternalStore, useState, useRef, useEffect } from 'react'
 import { CheckoutForm } from './CheckoutForm'
+import { useAnalytics } from '@/lib/hooks/useAnalytics'
 
 const emptyCartState: CartStoreState = {
   items: [],
@@ -40,6 +41,7 @@ export const CartSheet = () => {
   const removeItem = useCartStore(state => state.removeItem)
   const updateQuantity = useCartStore(state => state.updateQuantity)
   const clearCart = useCartStore(state => state.clearCart)
+  const { trackRemoveFromCart, trackUpdateCartQuantity, trackViewCart } = useAnalytics()
 
   // Focus on heading when status changes for better screen reader experience
   useEffect(() => {
@@ -114,6 +116,36 @@ export const CartSheet = () => {
       // Reset states when sheet closes
       setShowCheckout(false)
       setOrderStatus(null)
+    } else {
+      // Track cart view when sheet opens
+      trackViewCart(cart.getTotalItems(), cart.getTotalPrice())
+    }
+  }
+
+  const handleRemoveItem = (productId: string) => {
+    const item = cart.items.find(item => item.product.objectID === productId)
+    if (item) {
+      trackRemoveFromCart(
+        item.product,
+        item.quantity,
+        cart.getTotalPrice() - (item.product.price ?? 0) * item.quantity,
+        cart.getTotalItems() - item.quantity,
+      )
+    }
+    removeItem(productId)
+  }
+
+  const handleUpdateQuantity = (productId: string, newQuantity: number) => {
+    const item = cart.items.find(item => item.product.objectID === productId)
+    if (item) {
+      const oldQuantity = item.quantity
+      const quantityDiff = newQuantity - oldQuantity
+      updateQuantity(productId, newQuantity)
+
+      // Track quantity update - calculate new totals based on the change
+      const newTotal = cart.getTotalPrice() + (item.product.price ?? 0) * quantityDiff
+      const newItemCount = cart.getTotalItems() + quantityDiff
+      trackUpdateCartQuantity(item.product, newQuantity, newTotal, newItemCount)
     }
   }
 
@@ -344,7 +376,7 @@ export const CartSheet = () => {
                                 variant="ghost"
                                 size="icon"
                                 className="h-6 w-6"
-                                onClick={() => removeItem(item.product.objectID)}
+                                onClick={() => handleRemoveItem(item.product.objectID)}
                                 aria-label={`Remove ${item.product.name} from cart`}
                               >
                                 <X className="h-4 w-4" aria-hidden="true" />
@@ -360,7 +392,7 @@ export const CartSheet = () => {
                                   variant="outline"
                                   size="icon"
                                   className="h-8 w-8"
-                                  onClick={() => updateQuantity(item.product.objectID, item.quantity - 1)}
+                                  onClick={() => handleUpdateQuantity(item.product.objectID, item.quantity - 1)}
                                   aria-label={`Decrease quantity of ${item.product.name}. Current quantity: ${item.quantity}`}
                                   disabled={item.quantity <= 1}
                                 >
@@ -376,7 +408,7 @@ export const CartSheet = () => {
                                   variant="outline"
                                   size="icon"
                                   className="h-8 w-8"
-                                  onClick={() => updateQuantity(item.product.objectID, item.quantity + 1)}
+                                  onClick={() => handleUpdateQuantity(item.product.objectID, item.quantity + 1)}
                                   aria-label={`Increase quantity of ${item.product.name}. Current quantity: ${item.quantity}`}
                                 >
                                   <Plus className="h-4 w-4" aria-hidden="true" />

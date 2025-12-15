@@ -7,6 +7,7 @@ import { ProductInfo } from '@/components/product/ProductInfo'
 import { ProductTabs } from '@/components/product/ProductTabs'
 import { RelatedProducts } from '@/components/product/RelatedProducts'
 import { ProductJsonLd } from '@/components/product/ProductJsonLd'
+import { ProductViewTracker } from '@/components/analytics/ProductViewTracker'
 import { Metadata } from 'next'
 
 type ProductPageProps = {
@@ -14,47 +15,47 @@ type ProductPageProps = {
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-    const { slug } = await params
-  
-    const fallback = {
-      title: 'TofuStore',
-      description: 'Browse premium products at TofuStore. Fast shipping and great prices.',
-    }
-  
-    const productId = parseProductIdFromSlug(slug)
-    if (!productId) return { title: 'Product Not Found | TofuStore', description: fallback.description }
-  
-    const product = await getProductById(productId)
-    if (!product) return { title: 'Product Not Found | TofuStore', description: fallback.description }
-  
-    const title = `${product.name}${product.brand ? ` by ${product.brand}` : ''} | TofuStore`
-    const description =
-      (product.description && product.description.trim()) ||
-      `Shop ${product.name}${product.brand ? ` from ${product.brand}` : ''}. ${
-        product.price != null ? `Starting at $${product.price.toFixed(2)}.` : ''
-      } Free shipping on orders over $50.`
-  
-    const expectedSlug = `${generateProductSlug(product.name)}-${product.objectID}`
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tofustore.com'
-  
-    return {
+  const { slug } = await params
+
+  const fallback = {
+    title: 'TofuStore',
+    description: 'Browse premium products at TofuStore. Fast shipping and great prices.',
+  }
+
+  const productId = parseProductIdFromSlug(slug)
+  if (!productId) return { title: 'Product Not Found | TofuStore', description: fallback.description }
+
+  const product = await getProductById(productId)
+  if (!product) return { title: 'Product Not Found | TofuStore', description: fallback.description }
+
+  const title = `${product.name}${product.brand ? ` by ${product.brand}` : ''} | TofuStore`
+  const description =
+    (product.description && product.description.trim()) ||
+    `Shop ${product.name}${product.brand ? ` from ${product.brand}` : ''}. ${
+      product.price != null ? `Starting at $${product.price.toFixed(2)}.` : ''
+    } Free shipping on orders over $50.`
+
+  const expectedSlug = `${generateProductSlug(product.name)}-${product.objectID}`
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://tofustore.com'
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `${baseUrl}/product/${expectedSlug}` },
+    openGraph: {
       title,
       description,
-      alternates: { canonical: `${baseUrl}/product/${expectedSlug}` },
-      openGraph: {
-        title,
-        description,
-        type: 'website',
-        images: product.image ? [{ url: product.image, alt: product.name }] : [],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title,
-        description,
-        images: product.image ? [product.image] : [],
-      },
-    }
+      type: 'website',
+      images: product.image ? [{ url: product.image, alt: product.name }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: product.image ? [product.image] : [],
+    },
   }
+}
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
@@ -70,6 +71,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <>
       <ProductJsonLd product={product} />
+      <ProductViewTracker product={product} />
       <Breadcrumbs product={product} />
       <main id="main-content" className="flex-1">
         <article

@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { checkoutSchema, type CheckoutInput } from '@/lib/schemas/checkout-schema'
 import { checkoutAction } from '@/app/actions/checkout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { type CartItem } from '@/lib/stores/cart-store'
 import { Loader2 } from 'lucide-react'
+import { useAnalytics } from '@/lib/hooks/useAnalytics'
 
 type CheckoutFormProps = {
   items: CartItem[]
@@ -37,6 +38,20 @@ export const CheckoutForm = ({ items, total, onComplete, onError, onCancel }: Ch
     country: '',
   })
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
+  const { trackCheckoutStarted, trackCheckoutCompleted, trackCheckoutFailed } = useAnalytics()
+  const hasTrackedStart = useRef(false)
+
+  // Track checkout started when component mounts (only once)
+  useEffect(() => {
+    if (!hasTrackedStart.current) {
+      hasTrackedStart.current = true
+      trackCheckoutStarted(
+        items.map(item => ({ product: item.product, quantity: item.quantity })),
+        total,
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Only run once on mount
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -89,9 +104,21 @@ export const CheckoutForm = ({ items, total, onComplete, onError, onCancel }: Ch
       const result = await checkoutAction(checkoutData)
 
       if (result.success) {
+        // Track successful checkout
+        trackCheckoutCompleted(
+          result.orderId,
+          items.map(item => ({ product: item.product, quantity: item.quantity })),
+          total,
+        )
         onComplete(result.orderId, result.message)
       } else {
         const errorMessage = result.error || 'Checkout failed'
+        // Track failed checkout
+        trackCheckoutFailed(
+          errorMessage,
+          items.map(item => ({ product: item.product, quantity: item.quantity })),
+          total,
+        )
         setError(errorMessage)
         // Also notify parent component about the error
         if (onError) {

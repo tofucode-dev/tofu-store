@@ -12,7 +12,8 @@ import { StarRating } from '../shared/StarRating'
 import { getProductUrl } from '@/lib/slug-utils'
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import { Badge } from '../ui/badge'
-import { useCartStore} from '@/lib/stores/cart-store'
+import { useCartStore } from '@/lib/stores/cart-store'
+import { useAnalytics } from '@/lib/hooks/useAnalytics'
 
 type ProductCardProps = {
   product: Product
@@ -22,7 +23,9 @@ type ProductCardProps = {
 export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps) => {
   const [liked, setLiked] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
-  const addItem = useCartStore((state) => state.addItem)
+  const addItem = useCartStore(state => state.addItem)
+  const { trackAddToCart } = useAnalytics()
+  const cart = useCartStore(state => state)
 
   const productUrl = getProductUrl(product)
 
@@ -38,6 +41,9 @@ export const ProductCard = ({ product, hideAddToCart = false }: ProductCardProps
     addItem(product, 1)
     setAddedToCart(true)
     setTimeout(() => setAddedToCart(false), 1500)
+
+    // Track analytics
+    trackAddToCart(product, 1, cart.getTotalPrice(), cart.getTotalItems())
   }
 
   return (

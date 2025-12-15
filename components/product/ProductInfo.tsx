@@ -9,6 +9,7 @@ import { Button } from '../ui/button'
 import { Check, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useCartStore } from '@/lib/stores/cart-store'
+import { useAnalytics } from '@/lib/hooks/useAnalytics'
 
 type ProductInfoProps = {
   product: Product
@@ -19,11 +20,16 @@ export const ProductInfo = ({ product }: ProductInfoProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
   const addItem = useCartStore(state => state.addItem)
+  const { trackAddToCart } = useAnalytics()
+  const cart = useCartStore(state => state)
 
   const handleAddToCart = () => {
     addItem(product, quantity)
     setAddedToCart(true)
     setTimeout(() => setAddedToCart(false), 2000)
+
+    // Track analytics
+    trackAddToCart(product, quantity, cart.getTotalPrice(), cart.getTotalItems())
   }
 
   const decrementQuantity = () => {
