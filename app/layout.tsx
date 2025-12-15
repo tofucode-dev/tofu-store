@@ -21,6 +21,11 @@ const firaCodeMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: 'Tofu Store',
   description: 'Tofu Store - Your source for all things',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 }
 
 const RootLayout = ({
