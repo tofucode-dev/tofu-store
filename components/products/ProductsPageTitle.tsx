@@ -35,7 +35,7 @@ export const ProductsPageTitle = () => {
   }
 
   return (
-    <h1 className="px-3 py-2 text-lg font-semibold sm:px-6 sm:py-3 sm:text-xl">
+    <h1 className="px-0 py-2 text-lg font-semibold sm:py-3 sm:text-xl">
       {title}
     </h1>
   )

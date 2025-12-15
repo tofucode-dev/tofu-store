@@ -26,6 +26,7 @@ export const InstantSearchProvider = ({ children }: InstantSearchProviderProps) 
     <InstantSearchNext
       searchClient={searchClient}
       indexName={indexName}
+      ignoreMultipleHooksWarning={true}
       routing={{
         router: {
           cleanUrlOnDispose: false,

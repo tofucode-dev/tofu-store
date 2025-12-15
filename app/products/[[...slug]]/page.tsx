@@ -11,6 +11,7 @@ import { ProductListJsonLd } from '@/components/products/ProductListJsonLd'
 import { ProductsPageTitle } from '@/components/products/ProductsPageTitle'
 import { Stats } from '@/components/algolia/Stats'
 import { CurrentRefinements } from '@/components/algolia/CurrentRefinements'
+import { ClearRefinements } from '@/components/algolia/ClearRefinements'
 
 const categoryMappings = categoryMappingsJson satisfies {
   slugToValue: Record<string, string>
@@ -56,7 +57,11 @@ export async function generateMetadata({ params, searchParams }: ProductsPagePro
     const lastCategorySlug = slug[slug.length - 1]
     const categoryName =
       slugToValue[lastCategorySlug as keyof typeof slugToValue] ??
-      lastCategorySlug?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') ?? ''
+      lastCategorySlug
+        ?.split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ') ??
+      ''
 
     title = `${categoryName} | Products | TofuStore`
     description = `Browse ${categoryName} products. Filter by brand, price, rating, and more. Free shipping on orders over $50.`
@@ -88,7 +93,7 @@ export async function generateMetadata({ params, searchParams }: ProductsPagePro
 const ProductsPage = () => {
   return (
     <>
-    <ProductListJsonLd />
+      <ProductListJsonLd />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:ring-2 focus:ring-ring"
@@ -100,6 +105,7 @@ const ProductsPage = () => {
         <div className="flex min-h-0 flex-1">
           {/* Sidebar with Filters - hidden on mobile, shown via sheet */}
           <Sidebar>
+            <ClearRefinements />
             <HierarchicalMenu
               attributes={['hierarchicalCategories.lvl0', 'hierarchicalCategories.lvl1', 'hierarchicalCategories.lvl2']}
               title="Categories"

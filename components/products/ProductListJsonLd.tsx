@@ -92,11 +92,5 @@ export function ProductListJsonLd() {
   // Don't render if no items
   if (items.length === 0) return null
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  )
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 }
-
