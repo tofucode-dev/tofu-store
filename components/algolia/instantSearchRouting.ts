@@ -22,7 +22,7 @@ export type RouteState = {
  * "Air Conditioners" → "air-conditioners"
  * "TV & Home Theater" → "tv-and-home-theater"
  */
-function slugify(text: string): string {
+export function slugify(text: string): string {
   return text
     .toString()
     .toLowerCase()
