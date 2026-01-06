@@ -1,0 +1,46 @@
+.ais-AutocompleteForm {
+  border-radius: var(--radius-md);
+  height: 38.88px;
+}
+.ais-AutocompleteForm:focus-within {
+  border-color: var(--primary);
+  /* Add transparency to --primary: 20% opacity using color-mix */
+  box-shadow: color-mix(in srgb, var(--primary) 20%, transparent) 0 0 0 2px;
+  outline: currentColor none medium;
+}
+
+.ais-AutocompleteInputWrapperPrefix {
+  height: 38.88px;
+}
+
+.ais-AutocompleteSubmitIcon {
+  color: var(--primary) !important;
+}
+
+.ais-AutocompleteSubmitButton {
+  padding: 0 10px;
+}
+
+/* Ensure list items are not in Tab order but can be focused via arrow keys */
+.ais-AutocompletePanel [role='option'],
+.ais-AutocompletePanel a[role='option'] {
+  /* Items are focusable via arrow keys (programmatic focus) but not via Tab */
+  /* tabIndex={-1} is set in the component */
+  outline: none;
+}
+
+/* When panel is empty or closed, ensure nothing inside is focusable */
+.ais-AutocompletePanel:empty,
+.ais-AutocompletePanel[hidden] {
+  display: none;
+}
+
+/* Ensure the panel container itself is not focusable */
+.ais-AutocompletePanel {
+  pointer-events: auto;
+}
+
+/* Ensure list container is not in Tab order */
+.ais-AutocompleteList {
+  outline: none;
+}

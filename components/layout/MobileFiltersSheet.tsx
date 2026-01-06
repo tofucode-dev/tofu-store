@@ -3,13 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { RatingRefinementFilter } from '@/components/algolia/RatingRefinementFilter'
 import { ClearRefinements } from '@/components/algolia/ClearRefinements'
 import { HierarchicalMenu } from '@/components/algolia/HierarchicalMenu/HierarchicalMenu'
@@ -26,7 +20,7 @@ export function MobileFiltersSheet() {
       // Small delay to ensure sheet is fully rendered
       setTimeout(() => {
         const firstFocusable = firstFilterRef.current?.querySelector<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
         )
         firstFocusable?.focus()
       }, 100)
@@ -36,7 +30,7 @@ export function MobileFiltersSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2 md:hidden" aria-label="Open filters">
+        <Button variant="outline" size="sm" className="gap-2 w-full" aria-label="Open filters">
           <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
           <span>Filters</span>
         </Button>
@@ -63,4 +57,3 @@ export function MobileFiltersSheet() {
     </Sheet>
   )
 }
-

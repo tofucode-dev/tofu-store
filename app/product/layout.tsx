@@ -1,4 +1,5 @@
 import { Header } from '@/components/layout/Header'
+import { InstantSearchProvider } from '@/components/algolia/InstantSearchProvider'
 
 type ProductLayoutProps = {
   children: React.ReactNode
@@ -6,7 +7,7 @@ type ProductLayoutProps = {
 
 const ProductLayout = ({ children }: ProductLayoutProps) => {
   return (
-    <>
+    <InstantSearchProvider>
       <Header hideFilters={true} />
       <div className="flex min-h-screen flex-col bg-background">
         <a
@@ -22,8 +23,8 @@ const ProductLayout = ({ children }: ProductLayoutProps) => {
           </div>
         </footer>
       </div>
-    </>
+    </InstantSearchProvider>
   )
 }
 
-export default ProductLayout  
+export default ProductLayout
