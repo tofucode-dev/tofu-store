@@ -184,6 +184,11 @@ export function parseURL(location: Location): RouteState {
 
   const routeState: RouteState = {}
 
+  // Ignore product detail pages - they're not part of the search routing
+  if (pathname.startsWith('/product/')) {
+    return routeState
+  }
+
   // Parse categories from path
   if (pathname.startsWith('/products/')) {
     const categoryPath = pathname.replace('/products/', '')

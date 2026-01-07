@@ -102,12 +102,12 @@ const ProductsPage = () => {
   return (
     <>
       <ProductListJsonLd />
-      <a
+   {/*    <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:ring-2 focus:ring-ring"
       >
         Skip to main content
-      </a>
+      </a> */}
       <div className="flex h-full w-full flex-col overflow-hidden">
         {/* Main Content Area */}
         <div className="flex min-h-0 flex-1 w-full overflow-hidden">

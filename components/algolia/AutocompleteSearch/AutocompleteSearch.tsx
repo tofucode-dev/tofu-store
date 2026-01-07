@@ -29,7 +29,9 @@ export function AutocompleteSearch() {
             indexName,
             getQuery: (item: Product) => item.name,
             getURL: (item: Product) => getProductUrl(item),
-            itemComponent: ({ item }: { item: Product }) => <AutocompleteItem item={item} />,
+            itemComponent: ({ item, onSelect }: { item: Product; onSelect: () => void }) => (
+              <AutocompleteItem item={item} onSelect={onSelect} />
+            ),
             searchParameters: {
               hitsPerPage: 10,
             },
@@ -46,7 +48,7 @@ export function AutocompleteSearch() {
   )
 }
 
-function AutocompleteItem({ item }: { item: Product }) {
+function AutocompleteItem({ item, onSelect }: { item: Product; onSelect: () => void }) {
   const productUrl = getProductUrl(item)
 
   // Build comprehensive aria-label for screen readers (Narrator support)
@@ -59,12 +61,18 @@ function AutocompleteItem({ item }: { item: Product }) {
 
   const ariaLabel = ariaLabelParts.join(', ')
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    onSelect() // This will close the autocomplete and trigger the onSelect handler
+  }
+
   return (
     <Link
       href={productUrl}
       role="option"
       aria-label={ariaLabel}
       tabIndex={-1}
+      onClick={handleClick}
       className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 focus:bg-muted/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-colors border-b border-border last:border-b-0"
     >
       {item.image && (
